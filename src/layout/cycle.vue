@@ -48,5 +48,5 @@ const addCycle = () => {
 }
 .dialog-footer button:first-child {
     margin-right: 10px;
-  }
+}
 </style>
