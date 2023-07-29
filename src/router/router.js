@@ -6,6 +6,7 @@ import Signup from '~/views/signup.vue'
 import ForgotPassword from '~/views/forgotPassword.vue'
 import ResetPassword from '~/views/resetPassword.vue'
 import PreResetPW from '~/views/PreResetPW.vue'
+import Application from '~/views/application.vue'
 
 const routes = [
     {
@@ -34,6 +35,9 @@ const routes = [
     },{
         path: "/preResetPassword/:username",
         component: PreResetPW
+    },{
+        path: "/application/:cycle_id",
+        component: Application
     }
 ]
 

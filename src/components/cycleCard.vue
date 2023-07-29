@@ -1,6 +1,6 @@
 <template>
   <div v-for="cycle in cycle_list" :key="cycle" class="text item">
-    <el-card class="box-card">
+    <el-card class="box-card" @click="goCycleDetail(cycle.id)">
       <template #header>
         <div class="card-header" >
           <span> {{ cycle.cycle_name}}
@@ -31,10 +31,13 @@ import { Edit, Delete } from '@element-plus/icons-vue'
 import { reactive, ref } from "vue"
 import { getAllCycles,deleteCycle } from "~/api/cycle"
 import { notify } from '../composables/util'
+import { useRouter } from 'vue-router'
+
 
 const editDialogVisible = ref(false)
 const input = ref('')
 const cycle_list = ref(null)
+const router = useRouter()
 
 getAllCycles()
 .then(res => {
@@ -47,6 +50,10 @@ const goDeleteCycle = (cycle_id) => {
     window.location.reload()
     notify("delete success")
   })
+}
+
+const goCycleDetail = (cycle_id) => {
+  router.push("/application/" + cycle_id)
 }
 
 </script>
