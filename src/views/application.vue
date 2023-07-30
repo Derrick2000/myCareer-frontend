@@ -6,7 +6,24 @@
         <el-table :data="application_list" >
             <el-table-column prop="company" label="Company" width="180" />
             <el-table-column prop="url" label="Url" width="180" />
-            <el-table-column prop="status" label="Status" />
+            <el-table-column
+                prop="status"
+                label="Status"
+                width="180"
+                :filters="[
+                    { text: 'Planned', value: '-1' },
+                    { text: 'Applied', value: '0' },
+                    { text: 'Accepted', value: '1' },
+                    { text: 'Rejected', value: '2' },
+                ]"
+                :filter-method="filterTag"
+                filter-placement="bottom-end"
+                >
+                <template #default="scope">
+                    <el-tag :type="getStatusType(scope.row.status)" disable-transitions>{{ get_status(scope.row.status) }}</el-tag>
+                </template>
+            </el-table-column>
+            <!-- <el-table-column prop="status"  label="Status"></el-table-column> -->
             <el-table-column prop="comment" label="Comment" />
             <el-table-column prop="created_time" label="Date" />
         </el-table>
@@ -50,6 +67,19 @@ const goAddApp = () => {
         addAppVisible.value = false;
         window.location.reload()
     })
+}
+
+const get_status = (status) => {
+    if(status === -1) return 'Planned'
+    else if(status === 0) return 'Applied'
+    else if(status === 1) return 'Accepted'
+    else return 'Rejected'
+}
+
+const getStatusType = (status) => {
+    if(status === 2) return 'error'
+    else if(status === 1) return 'success'
+    else return ''
 }
 
 
