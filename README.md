@@ -1,6 +1,10 @@
 ## About
 - Getting a little disorganized with your job-searching process? I hope this tool finds you well.
 
+## Demo
+![Cycle](src/assets/cycle_demo.jpg)
+![Application](src/assets/app_demo.jpg)
+
 ## Built With
 <p align="left"> 
   &emsp; 
