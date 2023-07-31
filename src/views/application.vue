@@ -9,23 +9,21 @@
             <el-table-column
                 prop="status"
                 label="Status"
-                width="180"
-                :filters="[
-                    { text: 'Planned', value: '-1' },
-                    { text: 'Applied', value: '0' },
-                    { text: 'Accepted', value: '1' },
-                    { text: 'Rejected', value: '2' },
-                ]"
-                :filter-method="filterTag"
-                filter-placement="bottom-end"
-                >
+                width="180">
                 <template #default="scope">
                     <el-tag :type="getStatusType(scope.row.status)" disable-transitions>{{ get_status(scope.row.status) }}</el-tag>
                 </template>
             </el-table-column>
-            <!-- <el-table-column prop="status"  label="Status"></el-table-column> -->
             <el-table-column prop="comment" label="Comment" />
-            <el-table-column prop="created_time" label="Date" />
+            <el-table-column>
+                <template #header>
+                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                </template>
+                <template #default="scope">
+                    <el-button size="small" @click="handleEdit(scope.row.id)">Edit</el-button>
+                    <el-button size="small" type="danger" @click="handleDelete(scope.row.id)">Delete</el-button>
+                </template>
+            </el-table-column>
         </el-table>
     </div>
     <el-dialog v-model="addAppVisible" title="Add New Application" width="30%" center>
@@ -44,7 +42,7 @@
 <script setup>
 import Header from '~/layout/header.vue'
 import { reactive, ref } from "vue"
-import { getAllApplication, createApplication } from '~/api/application'
+import { getAllApplication, createApplication, deleteApplication} from '~/api/application'
 import { notify } from '../composables/util'
 
 
@@ -53,6 +51,7 @@ const addAppVisible = ref(false)
 const company = ref('')
 const url = ref('')
 const comment = ref('')
+const search = ref('')
 
 
 getAllApplication()
@@ -65,7 +64,10 @@ const goAddApp = () => {
     .then(res => {
         notify("Application added")
         addAppVisible.value = false;
-        window.location.reload()
+        getAllApplication()
+        .then(res => {
+            application_list.value = res.data
+        })
     })
 }
 
@@ -80,6 +82,20 @@ const getStatusType = (status) => {
     if(status === 2) return 'error'
     else if(status === 1) return 'success'
     else return ''
+}
+
+const handleEdit = (id) => {
+  console.log(id)
+}
+const handleDelete = (id) => {
+    deleteApplication(id)
+    .then(res => {
+        notify("Deleted")
+        getAllApplication()
+        .then(res => {
+            application_list.value = res.data
+        })
+    })
 }
 
 
