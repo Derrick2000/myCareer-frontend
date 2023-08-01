@@ -1,9 +1,5 @@
 import service from '~/axios'
 
-// var currentUrl = window.location.href;
-// var arr = currentUrl.split('/')
-// var cycle_id = arr[arr.length - 1]
-
 export function getAllApplication(){
     var currentUrl = window.location.href;
     var arr = currentUrl.split('/')
@@ -32,4 +28,12 @@ export function updateApplication(app_id, company, url, comment){
 
 export function deleteApplication(app_id) {
     return service.post("/application/delete/" + app_id, {})
+}
+
+export function getApplyNum(cycle_id) {
+    return service.get('/application/getAppliedNum/' + cycle_id)
+}
+
+export function getOfferNum(cycle_id) {
+    return service.get('/application/getOfferedNum/' + cycle_id)
 }

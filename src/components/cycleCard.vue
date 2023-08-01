@@ -10,9 +10,9 @@
           <el-button class="button" text>Started at:</el-button>
         </div>
       </template>
-      <div class="text">Applied: </div>
+      <div class="text">Applied: {{ applyNum(cycle.id)  }}</div>
         <br/>
-      <div class="text">Offer: </div>
+      <div class="text">Offer: {{ offerNum(cycle.id) }}</div>
     </el-card>
   </div>
   <el-dialog v-model="editDialogVisible" title="Edit Cycle Name" width="30%" center>
@@ -29,13 +29,18 @@
 <script setup>
 import { Edit, Delete } from '@element-plus/icons-vue'
 import { reactive, ref } from "vue"
-import { getAllCycles,deleteCycle } from "~/api/cycle"
+import { getAllCycles, deleteCycle } from "~/api/cycle"
+import { getApplyNum, getOfferNum } from '~/api/application'
 import { notify } from '../composables/util'
 import { useRouter } from 'vue-router'
 
 
+//TODO: appliedCount & offerCount for all cycles
+
 const editDialogVisible = ref(false)
 const input = ref('')
+const appliedCount = ref(0)
+const offerCount = ref(0)
 const cycle_list = ref(null)
 const router = useRouter()
 
@@ -44,10 +49,27 @@ getAllCycles()
   cycle_list.value = res.data
 })
 
+const applyNum = (cycle_id) => {
+  getApplyNum(cycle_id)
+  .then(res => {
+    appliedCount.value = res.data.count
+  })
+  return appliedCount.value
+}
+
+const offerNum = (cycle_id) => {
+  getOfferNum(cycle_id)
+  .then(res => {
+    offerCount.value = res.data.count
+  })
+  return offerCount.value
+}
+
+
 const goDeleteCycle = (cycle_id) => {
   deleteCycle(cycle_id)
   .then(res => {
-    window.location.reload()
+    getAllCycles()
     notify("delete success")
   })
 }
