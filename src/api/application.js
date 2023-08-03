@@ -18,11 +18,12 @@ export function createApplication(company, url, comment){
     })
 }
 
-export function updateApplication(app_id, company, url, comment){
+export function updateApplication(app_id, company, url, comment, status){
     return service.post("/application/update/" + app_id, {
         company,
         url,
-        comment
+        comment,
+        status
     })
 }
 
@@ -36,4 +37,8 @@ export function getApplyNum(cycle_id) {
 
 export function getOfferNum(cycle_id) {
     return service.get('/application/getOfferedNum/' + cycle_id)
+}
+
+export function getAppById(app_id) {
+    return service.get('/application/getAppById/' + app_id)
 }

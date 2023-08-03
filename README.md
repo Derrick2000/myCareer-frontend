@@ -4,6 +4,7 @@
 ## Demo
 ![Cycle](src/assets/cycle_demo.jpg)
 ![Application](src/assets/app_demo.jpg)
+![Application](src/assets/app_demo2.jpg)
 
 ## Built With
 <p align="left"> 

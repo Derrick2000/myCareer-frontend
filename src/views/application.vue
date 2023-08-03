@@ -25,6 +25,18 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-dialog v-model="editAppDialogVisible" title="Edit Application" width="30%" center>
+            <el-input v-model="default_company" placeholder="company"></el-input>
+            <el-input v-model="default_url" placeholder="url"/>
+            <el-input v-model="default_status"/>
+            <el-input v-model="default_comment" placeholder="comment"/>
+            <template #footer>
+                <span class="dialog-footer">
+                <el-button @click="editAppDialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="handleUpdateConfirm">Confirm</el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
     <el-dialog v-model="addAppVisible" title="Add New Application" width="30%" center>
       <el-input v-model="company" placeholder="Company" />
@@ -42,7 +54,7 @@
 <script setup>
 import Header from '~/layout/header.vue'
 import { reactive, ref } from "vue"
-import { getAllApplication, createApplication, deleteApplication} from '~/api/application'
+import { getAllApplication, createApplication, deleteApplication, getAppById, updateApplication } from '~/api/application'
 import { notify } from '../composables/util'
 
 
@@ -52,6 +64,13 @@ const company = ref('')
 const url = ref('')
 const comment = ref('')
 const search = ref('')
+const editAppDialogVisible = ref(false)
+const default_app = ref(null)
+const default_company = ref(null)
+const default_url = ref(null)
+const default_status = ref(null)
+const default_comment = ref(null)
+const edit_app_id = ref(0)
 
 
 getAllApplication()
@@ -62,6 +81,9 @@ getAllApplication()
 const goAddApp = () => {
     createApplication(company.value, url.value, comment.value)
     .then(res => {
+        company.value = null
+        url.value = null
+        comment.value = null
         notify("Application added")
         addAppVisible.value = false;
         getAllApplication()
@@ -79,13 +101,22 @@ const get_status = (status) => {
 }
 
 const getStatusType = (status) => {
-    if(status === 2) return 'error'
+    if(status === 2) return 'danger'
     else if(status === 1) return 'success'
     else return ''
 }
 
 const handleEdit = (id) => {
-  console.log(id)
+    getAppById(id)
+    .then(res => {
+        default_app.value = res.data
+        default_company.value = default_app.value.company
+        default_url.value = default_app.value.url
+        default_status.value = default_app.value.status
+        default_comment.value = default_app.value.comment
+        edit_app_id.value = id
+        editAppDialogVisible.value = true
+    })
 }
 const handleDelete = (id) => {
     deleteApplication(id)
@@ -96,6 +127,31 @@ const handleDelete = (id) => {
             application_list.value = res.data
         })
     })
+}
+
+const handleUpdateConfirm = () => {
+    updateApplication(edit_app_id.value, default_company.value, default_url.value, default_comment.value, default_status.value)
+    .then(() => {
+        getAllApplication()
+        .then(res => {
+            application_list.value = res.data
+        })
+        refresh_default()
+        editAppDialogVisible.value = false
+    })
+}
+
+const handleUpdateCancel = () => {
+    editAppDialogVisible.value = false
+    refresh_default()
+}
+
+const refresh_default = () => {
+    default_app.value = null
+    default_company.value = null
+    default_url.value = null
+    default_status.value = null
+    default_comment.value = null
 }
 
 
