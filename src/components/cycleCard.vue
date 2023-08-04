@@ -1,18 +1,20 @@
 <template>
   <div v-for="cycle in cycle_list" :key="cycle" class="text item">
-    <el-card class="box-card" @click="goCycleDetail(cycle.id)">
+    <el-card class="box-card">
       <template #header>
         <div class="card-header" >
           <span> {{ cycle.cycle_name}}
             <el-button :icon="Edit" @click="editDialogVisible = true"/>
             <el-button :icon="Delete" @click="goDeleteCycle(cycle.id)"/>
           </span>       
-          <el-button class="button" text>Started at:</el-button>
+          <!-- <el-button class="button" text>Started at:</el-button> -->
         </div>
       </template>
-      <div class="text">Applied: {{ applyNum(cycle.id)  }}</div>
+      <div @click="goCycleDetail(cycle.id)">
+        <div class="text">Applied: {{ applyNum(cycle.id)  }}</div>
         <br/>
-      <div class="text">Offer: {{ offerNum(cycle.id) }}</div>
+        <div class="text">Offer: {{ offerNum(cycle.id) }}</div>
+      </div>
     </el-card>
   </div>
   <el-dialog v-model="editDialogVisible" title="Edit Cycle Name" width="30%" center>
@@ -70,6 +72,9 @@ const goDeleteCycle = (cycle_id) => {
   deleteCycle(cycle_id)
   .then(res => {
     getAllCycles()
+    .then(res => {
+      cycle_list.value = res.data
+    })
     notify("delete success")
   })
 }

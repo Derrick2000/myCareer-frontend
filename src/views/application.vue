@@ -4,8 +4,8 @@
     <div class="app_table">
         <el-button type="primary" @click="addAppVisible = true">Add</el-button>
         <el-table :data="application_list" >
-            <el-table-column prop="company" label="Company" width="180" />
-            <el-table-column prop="url" label="Url" width="180" />
+            <el-table-column prop="company" label="Company" width="280" />
+            <!-- <el-table-column prop="url" label="Url" width="180" /> -->
             <el-table-column
                 prop="status"
                 label="Status"
@@ -14,10 +14,11 @@
                     <el-tag :type="getStatusType(scope.row.status)" disable-transitions>{{ get_status(scope.row.status) }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="comment" label="Comment" />
+            <el-table-column prop="comment" label="Comment" width="480"/>
             <el-table-column>
                 <template #header>
-                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                    <!-- <el-input v-model="search" size="small" placeholder="Type to search" /> -->
+                    Operation
                 </template>
                 <template #default="scope">
                     <el-button size="small" @click="handleEdit(scope.row.id)">Edit</el-button>
@@ -27,8 +28,10 @@
         </el-table>
         <el-dialog v-model="editAppDialogVisible" title="Edit Application" width="30%" center>
             <el-input v-model="default_company" placeholder="company"></el-input>
-            <el-input v-model="default_url" placeholder="url"/>
+            <div class="my-3"></div>
+            <!-- <el-input v-model="default_url" placeholder="url"/> -->
             <el-input v-model="default_status"/>
+            <div class="my-3"></div>
             <el-input v-model="default_comment" placeholder="comment"/>
             <template #footer>
                 <span class="dialog-footer">
@@ -40,8 +43,10 @@
     </div>
     <el-dialog v-model="addAppVisible" title="Add New Application" width="30%" center>
       <el-input v-model="company" placeholder="Company" />
+      <div class="my-3"></div>
       <el-input v-model="url" placeholder="Url" />
-      <el-input v-model="comment" placeholder="Comment" />
+      <div class="my-3"></div>
+      <!-- <el-input v-model="comment" placeholder="Comment" /> -->
       <template #footer>
           <span class="dialog-footer">
           <el-button @click="addAppVisible = false">Cancel</el-button>
