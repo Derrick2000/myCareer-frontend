@@ -1,28 +1,25 @@
 <template>
-  <div v-for="cycle in cycle_list" :key="cycle" class="text item">
-    <el-card class="box-card">
+  <el-card class="box-card">
       <template #header>
         <div class="card-header" >
-          <span> {{ cycle.cycle_name}}
+          <span> {{ name }}
             <el-button :icon="Edit" @click="editDialogVisible = true"/>
-            <el-button :icon="Delete" @click="goDeleteCycle(cycle.id)"/>
+            <el-button :icon="Delete" @click="goDeleteCycle(id)"/>
           </span>       
-          <!-- <el-button class="button" text>Started at:</el-button> -->
         </div>
       </template>
-      <div @click="goCycleDetail(cycle.id)">
-        <div class="text">Applied: {{ applyNum(cycle.id)  }}</div>
+      <div @click="goCycleDetail(id)">
+        <div class="text">Applied: {{ applyNum(id)  }}</div>
         <br/>
-        <div class="text">Offer: {{ offerNum(cycle.id) }}</div>
+        <div class="text">Offer: {{ offerNum(id) }}</div>
       </div>
-    </el-card>
-  </div>
+  </el-card>
   <el-dialog v-model="editDialogVisible" title="Edit Cycle Name" width="30%" center>
-      <el-input v-model="input" placeholder="Rename Cycle" />
+      <el-input v-model="new_cycle_name" placeholder="Rename Cycle" />
       <template #footer>
           <span class="dialog-footer">
           <el-button @click="editDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="editDialogVisible = false">Confirm</el-button>
+          <el-button type="primary" @click="goRenameCycle(id)">Confirm</el-button>
           </span>
       </template>
   </el-dialog>
@@ -31,25 +28,22 @@
 <script setup>
 import { Edit, Delete } from '@element-plus/icons-vue'
 import { reactive, ref } from "vue"
-import { getAllCycles, deleteCycle } from "~/api/cycle"
+import { updateCycle, deleteCycle } from "~/api/cycle"
 import { getApplyNum, getOfferNum } from '~/api/application'
 import { notify } from '../composables/util'
 import { useRouter } from 'vue-router'
 
 
-//TODO: appliedCount & offerCount for all cycles
+defineProps({
+  id: Number,
+  name: String
+})
 
 const editDialogVisible = ref(false)
-const input = ref('')
+const new_cycle_name = ref('')
 const appliedCount = ref(0)
 const offerCount = ref(0)
-const cycle_list = ref(null)
 const router = useRouter()
-
-getAllCycles()
-.then(res => {
-  cycle_list.value = res.data
-})
 
 const applyNum = (cycle_id) => {
   getApplyNum(cycle_id)
@@ -71,11 +65,17 @@ const offerNum = (cycle_id) => {
 const goDeleteCycle = (cycle_id) => {
   deleteCycle(cycle_id)
   .then(res => {
-    getAllCycles()
-    .then(res => {
-      cycle_list.value = res.data
-    })
+    window.location.reload()
     notify("delete success")
+  })
+}
+
+const goRenameCycle = (cycle_id) => {
+  updateCycle(new_cycle_name.value, cycle_id)
+  .then(res => {
+    window.location.reload()
+    notify("update success")
+    editDialogVisible.value = false
   })
 }
 

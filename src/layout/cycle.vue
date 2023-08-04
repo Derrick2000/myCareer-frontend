@@ -12,30 +12,38 @@
                 </span>
             </template>
         </el-dialog>
-        <!-- <ExampleCycleCard></ExampleCycleCard> -->
-        <CycleCard></CycleCard>
+        <div v-for="cycle in cycle_list" :key="cycle" class="text item">
+            <CycleCard :id="cycle.id" :name="cycle.cycle_name"></CycleCard>
+        </div>
     </div>
 </template>
 
 <script setup>
 import { reactive, ref } from "vue"
 import CycleCard from '~/components/cycleCard.vue'
-import ExampleCycleCard from '~/components/exampleCycleCard.vue'
 import { notify } from '../composables/util'
-import { createCycle } from '~/api/cycle'
+import { createCycle, getAllCycles, deleteCycle  } from '~/api/cycle'
 
 const dialogVisible = ref(false)
 const cycle_name = ref('')
+const cycle_list = ref(null)
 
 const addCycle = () => {
-    console.log(cycle_name.value)
     createCycle(cycle_name.value)
     .then(res => {
         notify("Cycle added")
         dialogVisible.value = false;
-        window.location.reload()
+        getAllCycles()
+        .then(res => {
+            cycle_list.value = res.data
+        })
     })
 }
+
+getAllCycles()
+.then(res => {
+  cycle_list.value = res.data
+})
 
 
 </script>
