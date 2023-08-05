@@ -35,7 +35,7 @@
             <el-input v-model="default_comment" placeholder="comment"/>
             <template #footer>
                 <span class="dialog-footer">
-                <el-button @click="editAppDialogVisible = false">Cancel</el-button>
+                <el-button @click="handleUpdateCancel">Cancel</el-button>
                 <el-button type="primary" @click="handleUpdateConfirm">Confirm</el-button>
                 </span>
             </template>
@@ -44,9 +44,9 @@
     <el-dialog v-model="addAppVisible" title="Add New Application" width="30%" center>
       <el-input v-model="company" placeholder="Company" />
       <div class="my-3"></div>
-      <el-input v-model="url" placeholder="Url" />
+      <!-- <el-input v-model="url" placeholder="Url" /> -->
       <div class="my-3"></div>
-      <!-- <el-input v-model="comment" placeholder="Comment" /> -->
+      <el-input v-model="comment" placeholder="Comment" />
       <template #footer>
           <span class="dialog-footer">
           <el-button @click="addAppVisible = false">Cancel</el-button>
