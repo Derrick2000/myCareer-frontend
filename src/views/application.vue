@@ -3,6 +3,12 @@
     <div class="my-12"></div>
     <div class="app_table">
         <el-button type="primary" @click="addAppVisible = true">Add</el-button>
+        <el-popconfirm title="Are you sure to export to a PDF?" width="220" @confirm="confirmExportPDF">
+            <template #reference>
+                <el-button>Export PDF</el-button>
+            </template>
+        </el-popconfirm>
+        <div class="my-3"></div>
         <el-table :data="application_list" >
             <el-table-column prop="company" label="Company" width="280" />
             <!-- <el-table-column prop="url" label="Url" width="180" /> -->
@@ -61,6 +67,8 @@ import Header from '~/layout/header.vue'
 import { reactive, ref } from "vue"
 import { getAllApplication, createApplication, deleteApplication, getAppById, updateApplication } from '~/api/application'
 import { notify } from '../composables/util'
+import { jsPDF } from "jspdf"
+import { applyPlugin } from 'jspdf-autotable'
 
 
 const application_list = ref(null)
@@ -157,6 +165,36 @@ const refresh_default = () => {
     default_url.value = null
     default_status.value = null
     default_comment.value = null
+}
+
+const confirmExportPDF = () => {
+    getAllApplication()
+    .then(res => {
+        let info = []
+        res.data.forEach((element, index, array) => {
+            let company = element.company
+            let comment = element.comment
+            let statusNum = element.status
+            let status = "Unknown"
+            if(statusNum == -1){
+                status = "Planned"
+            }else if(statusNum == 0){
+                status = "Applied"
+            }else if(statusNum == 1){
+                status = "Accepted"
+            }else if(statusNum == 2){
+                status = "Rejected"
+            }
+            if(comment == null) comment = ""
+            info.push([company, comment, status])
+        })
+        const doc = new jsPDF()
+        doc.autoTable({
+        head: [['Company', 'Comment', 'Status']],
+        body: info
+        })
+        doc.save("myCareer.pdf")
+    })
 }
 
 

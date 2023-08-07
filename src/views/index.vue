@@ -36,25 +36,6 @@ export default {
         removeToken()
         this.$router.go('/')
         logout()
-      },
-      exportPDF(){
-        getAllApplication(1)
-        .then(res => {
-          let info = []
-          res.data.forEach((element, index, array) => {
-            let company = element.company
-            let comment = element.comment
-            let status = element.status
-            if(comment == null) comment = ""
-            info.push([company, comment, status])
-          })
-          const doc = new jsPDF()
-          doc.autoTable({
-            head: [['Company', 'Comment', 'Status']],
-            body: info
-          })
-          doc.save("test.pdf")
-        })
       }
     }
 }
