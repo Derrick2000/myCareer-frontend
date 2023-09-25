@@ -1,7 +1,7 @@
 import service from '~/axios'
 import { getToken } from '~/composables/auth'
 
-let user_id = getToken().user_id
+let user_id = getToken() == null ? null : getToken().user_id
 
 export function getAllCycles(){
     return service.get("/cycle/getAll/" + user_id)

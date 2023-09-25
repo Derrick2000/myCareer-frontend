@@ -102,7 +102,7 @@ const onSignup = () => {
         .then(res => {
             if(res.data.status == 'success'){
                 notify("Sign up sucess.. Logging in")
-                setToken(res.token)
+                setToken(res.data)
                 router.push('/')
             }else{
                 notify(res.data.message, "error")
