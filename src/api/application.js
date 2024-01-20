@@ -31,8 +31,18 @@ export function deleteApplication(app_id) {
     return service.post("/application/delete/" + app_id, {})
 }
 
-export function getApplyNum(cycle_id) {
+export function getApplyNum() {
+    var currentUrl = window.location.href;
+    var arr = currentUrl.split('/')
+    var cycle_id = arr[arr.length - 1]
     return service.get('/application/getAppliedNum/' + cycle_id)
+}
+
+export function getAvailabilityNum() {
+    var currentUrl = window.location.href;
+    var arr = currentUrl.split('/')
+    var cycle_id = arr[arr.length - 1]
+    return service.get('/application/getAvailabilityNum/' + cycle_id)
 }
 
 export function getOfferNum(cycle_id) {

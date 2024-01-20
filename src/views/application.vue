@@ -8,6 +8,7 @@
                 <el-button>Export PDF</el-button>
             </template>
         </el-popconfirm>
+        <span class="stats">Applied: {{ applied_num }}  Availability: {{ availability_num }}</span>
         <div class="my-3"></div>
         <el-table :data="application_list" >
             <el-table-column prop="company" label="Company" width="280" />
@@ -65,7 +66,7 @@
 <script setup>
 import Header from '~/layout/header.vue'
 import { reactive, ref } from "vue"
-import { getAllApplication, createApplication, deleteApplication, getAppById, updateApplication } from '~/api/application'
+import { getAllApplication, createApplication, deleteApplication, getAppById, updateApplication, getApplyNum, getAvailabilityNum } from '~/api/application'
 import { notify } from '../composables/util'
 import { jsPDF } from "jspdf"
 import { applyPlugin } from 'jspdf-autotable'
@@ -85,11 +86,25 @@ const default_status = ref(null)
 const default_comment = ref(null)
 const edit_app_id = ref(0)
 
+const applied_num = ref(0)
+const availability_num = ref(0)
+
 
 getAllApplication()
 .then(res => {
     application_list.value = res.data
 })
+
+getApplyNum()
+.then(res => {
+    applied_num.value = res.data.count
+})
+
+getAvailabilityNum()
+.then(res => {
+    availability_num.value = res.data.count
+})
+
 
 const goAddApp = () => {
     createApplication(company.value, url.value, comment.value)
@@ -102,6 +117,14 @@ const goAddApp = () => {
         getAllApplication()
         .then(res => {
             application_list.value = res.data
+        })
+        getApplyNum()
+        .then(res => {
+            applied_num.value = res.data.count
+        })
+        getAvailabilityNum()
+        .then(res => {
+            availability_num.value = res.data.count
         })
     })
 }
@@ -139,6 +162,14 @@ const handleDelete = (id) => {
         .then(res => {
             application_list.value = res.data
         })
+        getApplyNum()
+        .then(res => {
+            applied_num.value = res.data.count
+        })
+        getAvailabilityNum()
+        .then(res => {
+            availability_num.value = res.data.count
+        })
     })
 }
 
@@ -151,7 +182,12 @@ const handleUpdateConfirm = () => {
         })
         refresh_default()
         editAppDialogVisible.value = false
+        getAvailabilityNum()
+        .then(res => {
+            availability_num.value = res.data.count
+        })
     })
+
 }
 
 const handleUpdateCancel = () => {
