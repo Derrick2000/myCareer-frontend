@@ -29,7 +29,7 @@
 import { Edit, Delete } from '@element-plus/icons-vue'
 import { reactive, ref } from "vue"
 import { updateCycle, deleteCycle } from "~/api/cycle"
-import { getApplyNum, getOfferNum } from '~/api/application'
+import { getApplyNumWithId, getOfferNum } from '~/api/application'
 import { notify } from '../composables/util'
 import { useRouter } from 'vue-router'
 
@@ -46,7 +46,7 @@ const offerCount = ref(0)
 const router = useRouter()
 
 const applyNum = (cycle_id) => {
-  getApplyNum(cycle_id)
+  getApplyNumWithId(cycle_id)
   .then(res => {
     appliedCount.value = res.data.count
   })

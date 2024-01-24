@@ -38,6 +38,10 @@ export function getApplyNum() {
     return service.get('/application/getAppliedNum/' + cycle_id)
 }
 
+export function getApplyNumWithId(cycle_id) {
+    return service.get('/application/getAppliedNum/' + cycle_id)
+}
+
 export function getAvailabilityNum() {
     var currentUrl = window.location.href;
     var arr = currentUrl.split('/')
